@@ -130,3 +130,29 @@ app.put("/books/:bookId/", async (request, response) => {
   const dbResponse = await db.run(updateBookQuery);
   response.send("Book Updated Successfully");
 });
+
+app.delete("/books/:bookId", async (request, response) => {
+  const { bookId } = request.params;
+  const deleteBookQuery = `
+    DELETE FROM
+        book
+    WHERE
+        book_id = ${bookId};`;
+  const dbResponse = await db.run(deleteBookQuery);
+  response.send("Book Deleted");
+});
+
+//GET AUTHOR BOOKS API
+app.get("/authors/:authorId/books/", async (request, response) => {
+  const { authorId } = request.params;
+  const getAuthorBooksQuery = `
+    SELECT
+    *
+    FROM
+        book
+    WHERE
+        author_id = ${authorId};`;
+
+  const dbResponse = await db.all(getAuthorBooksQuery);
+  response.send(dbResponse);
+});
